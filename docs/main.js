@@ -37,12 +37,19 @@ const request = fetch("https://my.api.mockaroo.com/data.json?key=937009f0")
     const gdp_array = [];
     const area_array = [];
 
-    // Iteracja pętlą "for" po tablicy 100 elementowej
-    data.forEach((item, index) => {
-      labels[index] = item.country; // Dodajemy nazwę państwa do tablicy "labels"
-      gdp_array[index] = item.gdp_per_capita; // Dodajemy wartość PKB na 1 mieszkańca do tablicy "gdp_array"
-      area_array[index] = item.area; // Dodajemy wartość powierzchni danego kraju do tablicy "area_array"
-    });
+    // Usuwamy zduplikowane państwa, aby nie wyświetlały się w wykresie
+    // https://fullstackheroes.com/tutorials/javascript/5-ways-to-remove-duplicate-objects-from-array-based-on-property/
+    data
+      .filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.country === value.country)
+      )
+      // Iteracja pętlą "for" po tablicy 100 elementowej
+      .forEach((item, index) => {
+        labels[index] = item.country; // Dodajemy nazwę państwa do tablicy "labels"
+        gdp_array[index] = item.gdp_per_capita; // Dodajemy wartość PKB na 1 mieszkańca do tablicy "gdp_array"
+        area_array[index] = item.area; // Dodajemy wartość powierzchni danego kraju do tablicy "area_array"
+      });
 
     // #REGION -- Tworzenie wykresów -- #REGION
 
